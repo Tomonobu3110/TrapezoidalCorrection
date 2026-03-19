@@ -28,6 +28,10 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -43,6 +47,21 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        View root = findViewById(R.id.root);
+        ViewCompat.setOnApplyWindowInsetsListener(root, (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            // controls にだけ bottom padding を追加
+            View controls = findViewById(R.id.controls);
+            controls.setPadding(
+                    controls.getPaddingLeft(),
+                    controls.getPaddingTop(),
+                    controls.getPaddingRight(),
+                    systemBars.bottom
+            );
+            return insets;
+        });
+
         imageView = findViewById(R.id.imageView);
         overlay = findViewById(R.id.overlay);
         aspectSpinner = findViewById(R.id.aspect_spinner);
